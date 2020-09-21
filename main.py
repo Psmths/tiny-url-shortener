@@ -65,7 +65,7 @@ def lookup_link(shortened_url):
     config.read('.config')
     domain = config['general']['domain']
     db_path = config['general']['dbpath']
-    age_limit = config['general']['agelimit']
+    age_limit = int(config['general']['agelimit']) * 3600 #max time in seconds
 
     #Remove everything but the uid
     strip = 'https://' + domain + '/'
@@ -78,13 +78,25 @@ def lookup_link(shortened_url):
     #Error duplicate
     if (len(results)) > 1:
         return
-    else:
-        return results[0]['location']
+
+    #Error no record found
+    if (len(results)) == 0:
+        return
+
+    record = results[0]
+
+    #Check if time expired and remove if so
+    if not (age_limit == 0): #Disables age limiting
+        if (time.time() - float(record['ts']) > float(age_limit)):
+            db.remove(uid_query.uid == uid)
+            return
+
+    return results[0]['location']
 
 
 def main():
     print(lookup_link(add_new_link('t2est.com/asdf')))
-
+    print(lookup_link("*"))
 
 if __name__ == "__main__":
     main()

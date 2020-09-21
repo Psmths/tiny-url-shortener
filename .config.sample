@@ -1,5 +1,7 @@
 [general]
-dbpath = "./"
+dbpath = ./db.json
 lengthlimit = 5
-agelimit = 24
-domain = "example.com"
+digits = yes
+agelimit = 0
+domain = example.com/s
+checkduplicate = no
