@@ -1,0 +1,5 @@
+[general]
+dbpath = "./"
+lengthlimit = 5
+agelimit = 24
+domain = "example.com"
