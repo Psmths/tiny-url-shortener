@@ -43,6 +43,10 @@ def add_new_link(url):
     #Generate an ID
     uid = gen_rand_id()
 
+    #Add http to URL if not present
+    if not "http" in url:
+        url = "http://" + url
+
     #Create a new entry
     new_entry = {
         'location': url,
@@ -97,18 +101,18 @@ def lookup_link(shortened_url):
 def main():
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('r',
+    parser.add_argument('--request',
         help='Parse a shortened URL request. Takes <shortlink>', nargs='?')
-    parser.add_argument('c',
+    parser.add_argument('--create',
         help='Create a shortened URL. Takes <longlink>', nargs='?')
 
     args = parser.parse_args()
 
-    if (args.c):
-        print(add_new_link(args.c))
+    if (args.create):
+        print(add_new_link(args.create))
 
-    if (args.r):
-        print(lookup_link(args.r))
+    if (args.request):
+        print(lookup_link(args.request))
 
 if __name__ == "__main__":
     main()

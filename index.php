@@ -4,7 +4,7 @@
   if ($_SERVER[REQUEST_URI] == "/$base/create" or $_SERVER[REQUEST_URI] == "/$base/create/"){
     require("shortener.html");
     if ($_POST["url"]){
-      $toshorten = $_POST["url"];
+      $toshorten = escapeshellcmd($_POST["url"]);
       $shortener = exec("python3 main.py --create $toshorten 2>&1");
       echo($shortener);
     }
