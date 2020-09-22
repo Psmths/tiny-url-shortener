@@ -1,7 +1,16 @@
 [general]
+#Path to the database file
 dbpath = ./db.json
+
+#The length of the generated shortened URLs
 lengthlimit = 5
+
+#Allow digits in shortened url (yes/no)
 digits = yes
+
+#Enforce age limits. If 0, disabled. Units are in hours. Upon accessing a stale
+#shortened link, the entry is pruned from the database and a 404 will be returned.
 agelimit = 0
+
+#The domain and directory the shortener is hosted on
 domain = example.com/s
-checkduplicate = no
