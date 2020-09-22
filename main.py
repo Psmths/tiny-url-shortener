@@ -97,7 +97,6 @@ def lookup_link(shortened_url):
 
     return results[0]['location']
 
-
 def main():
     parser = argparse.ArgumentParser()
 
