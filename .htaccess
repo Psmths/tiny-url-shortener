@@ -1,0 +1,13 @@
+RewriteEngine On
+RewriteRule ^.+$ index.php [NC,L]
+
+# NOTE: You MUST enable htaccess files in your server's vhost config! To do this
+# in apache:
+#
+# <Directory /var/www/phreatica.com/s>
+#     Options Indexes FollowSymLinks
+#     AllowOverride All
+#     Require all granted
+# </Directory>
+#
+# Diagnosis: 404 errors

@@ -95,8 +95,20 @@ def lookup_link(shortened_url):
 
 
 def main():
-    print(lookup_link(add_new_link('t2est.com/asdf')))
-    print(lookup_link("*"))
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('r',
+        help='Parse a shortened URL request. Takes <shortlink>', nargs='?')
+    parser.add_argument('c',
+        help='Create a shortened URL. Takes <longlink>', nargs='?')
+
+    args = parser.parse_args()
+
+    if (args.c):
+        print(add_new_link(args.c))
+
+    if (args.r):
+        print(lookup_link(args.r))
 
 if __name__ == "__main__":
     main()
