@@ -14,4 +14,4 @@ agelimit = 0
 domain = example.com/s
 ```
 
-Ensure that permissions are correct! To start shortening URLs, simply navigate to http://example.com/create/.
+Ensure that permissions are correct! To start shortening URLs, simply navigate to http://example.com/s/create/.
