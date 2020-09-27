@@ -5,11 +5,12 @@ import random
 import string
 import time
 
+
 def gen_rand_id():
     """
     This method will generate a random ID based on the config parameters.
     """
-    #Get the length limit for the shortened ID
+    # Get the length limit for the shortened ID
     config = configparser.ConfigParser()
     config.read('.config')
     length_limit = config['general']['lengthlimit']
@@ -22,7 +23,7 @@ def gen_rand_id():
 
     return ''.join(random.choices(
         valid,
-        k = int(length_limit)))
+        k=int(length_limit)))
 
 
 def add_new_link(url):
@@ -32,7 +33,7 @@ def add_new_link(url):
     This will only store the ID as this allows for future migration to a
     different domain or directory.
     """
-    #Get configs
+    # Get configs
     config = configparser.ConfigParser()
     config.read('.config')
     domain = config['general']['domain']
@@ -40,70 +41,74 @@ def add_new_link(url):
 
     db = TinyDB(db_path)
 
-    #Generate an ID
+    # Generate an ID
     uid = gen_rand_id()
 
-    #Add http to URL if not present
-    if not "http" in url:
+    # Add http to URL if not present
+    if "http" not in url:
         url = "http://" + url
 
-    #Create a new entry
+    # Create a new entry
     new_entry = {
         'location': url,
         'uid': uid,
         'ts': time.time()
     }
 
-    #Insert entry into db
+    # Insert entry into db
     db.insert(new_entry)
 
     shortened_url = 'https://' + domain + "/" + uid
     return shortened_url
 
+
 def lookup_link(shortened_url):
     """
-    This method takes a shortened URL and returns the complete URL for redirect.
+    This method takes a shortened URL and returns the complete
+    URL for redirect.
     """
-    #Get configs
+    # Get configs
     config = configparser.ConfigParser()
     config.read('.config')
     domain = config['general']['domain']
     db_path = config['general']['dbpath']
-    age_limit = int(config['general']['agelimit']) * 3600 #max time in seconds
+    age_limit = int(config['general']['agelimit']) * 3600
 
-    #Remove everything but the uid
+    # Remove everything but the uid
     strip = 'https://' + domain + '/'
-    uid = shortened_url.replace(strip,'')
+    uid = shortened_url.replace(strip, '')
 
     db = TinyDB(db_path)
     uid_query = Query()
     results = db.search(uid_query.uid == uid)
 
-    #Error duplicate
+    # Error duplicate
     if (len(results)) > 1:
         return
 
-    #Error no record found
+    # Error no record found
     if (len(results)) == 0:
         return
 
     record = results[0]
 
-    #Check if time expired and remove if so
-    if not (age_limit == 0): #Disables age limiting
+    # Check if time expired and remove if so
+    if not (age_limit == 0):  # Disables age limiting
         if (time.time() - float(record['ts']) > float(age_limit)):
             db.remove(uid_query.uid == uid)
             return
 
     return results[0]['location']
 
+
 def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument('--request',
-        help='Parse a shortened URL request. Takes <shortlink>', nargs='?')
+                        help='Parse a shortened URL request. Takes <shortlink>',
+                        nargs='?')
     parser.add_argument('--create',
-        help='Create a shortened URL. Takes <longlink>', nargs='?')
+                        help='Create a shortened URL. Takes <longlink>', nargs='?')
 
     args = parser.parse_args()
 
