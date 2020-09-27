@@ -73,10 +73,15 @@ def lookup_link(shortened_url):
     domain = config['general']['domain'].rstrip('/')
     db_path = config['general']['dbpath']
     age_limit = int(config['general']['agelimit']) * 3600
+    length_limit = config['general']['lengthlimit']
 
     # Remove everything but the uid
     strip = 'https://' + domain + '/'
     uid = shortened_url.replace(strip, '')
+
+    # Check if request is too long
+    if (len(uid) > length_limit):
+        return
 
     db = TinyDB(db_path)
     uid_query = Query()
