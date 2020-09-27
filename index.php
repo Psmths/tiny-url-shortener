@@ -4,21 +4,17 @@
   if ($_SERVER[REQUEST_URI] == "/$base/create" or $_SERVER[REQUEST_URI] == "/$base/create/"){
     require("shortener.html");
     if ($_POST["url"]){
-      $toshorten = escapeshellcmd($_POST["url"]);
-      $shortener = exec("python3 main.py --create $toshorten 2>&1");
+      $shortener = exec(escapeshellcmd("python3 main.py --create ".escapeshellarg($_POST["url"])." 2>&1"));
       echo($shortener);
     }
   }else{
-
-  $dest = exec("python3 main.py --request $request 2>&1");
-
-  if ($dest == "None"){
-    http_response_code(404);
-    echo("404: Resource not found.");
-  } else {
-    echo($dest);
-    header("HTTP/1.1 301 Moved Permanently");
-    header("Location: $dest");
-  }
+    $dest = exec(escapeshellcmd("python3 main.py --request ".escapeshellarg($request)." 2>&1"));
+    if ($dest == "None"){
+      http_response_code(404);
+      echo("404: Resource not found.");
+    } else {
+      header("HTTP/1.1 301 Moved Permanently");
+      header("Location: $dest");
+    }
   }
 ?>
