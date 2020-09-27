@@ -13,7 +13,7 @@ def gen_rand_id():
     # Get the length limit for the shortened ID
     config = configparser.ConfigParser()
     config.read('.config')
-    length_limit = config['general']['lengthlimit']
+    length_limit = config['general'].getint('lengthlimit')
     digits = config['general'].getboolean('digits')
 
     valid = string.ascii_uppercase
@@ -23,7 +23,7 @@ def gen_rand_id():
 
     return ''.join(random.choices(
         valid,
-        k=int(length_limit)))
+        k=length_limit))
 
 
 def add_new_link(url):
@@ -72,11 +72,16 @@ def lookup_link(shortened_url):
     config.read('.config')
     domain = config['general']['domain'].rstrip('/')
     db_path = config['general']['dbpath']
-    age_limit = int(config['general']['agelimit']) * 3600
+    age_limit = config['general'].getint('agelimit') * 3600
+    length_limit = config['general'].getint('lengthlimit')
 
     # Remove everything but the uid
     strip = 'https://' + domain + '/'
     uid = shortened_url.replace(strip, '')
+
+    # Check if request is too long
+    if (len(uid) > length_limit):
+        return
 
     db = TinyDB(db_path)
     uid_query = Query()
