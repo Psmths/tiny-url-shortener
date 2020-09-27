@@ -36,7 +36,7 @@ def add_new_link(url):
     # Get configs
     config = configparser.ConfigParser()
     config.read('.config')
-    domain = config['general']['domain']
+    domain = config['general']['domain'].rstrip('/')
     db_path = config['general']['dbpath']
 
     db = TinyDB(db_path)
@@ -70,7 +70,7 @@ def lookup_link(shortened_url):
     # Get configs
     config = configparser.ConfigParser()
     config.read('.config')
-    domain = config['general']['domain']
+    domain = config['general']['domain'].rstrip('/')
     db_path = config['general']['dbpath']
     age_limit = int(config['general']['agelimit']) * 3600
 
