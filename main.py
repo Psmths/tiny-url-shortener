@@ -4,7 +4,32 @@ import argparse
 import random
 import string
 import time
+import bitarray
 
+def owo_encode(s):
+    ba = bitarray.bitarray()
+    ba.frombytes(s.encode('utf-8'))
+    o = ''
+    s = 0
+    g = ''
+    for b in ba:
+      if s == 0:
+        g = ('u' if b else 'o')
+        s = 1
+        continue
+      if s == 1:
+        o = o + (g.upper() if b else g)
+        s = 2
+        continue
+      if s == 2:
+        o = o + ('W' if b else 'w')
+        s = 3
+        continue
+      if s == 3:
+        o = o + (g.upper() if b else g)
+        s = 0
+        continue
+    return o
 
 def gen_rand_id():
     """
@@ -38,11 +63,13 @@ def add_new_link(url):
     config.read('.config')
     domain = config['general']['domain'].rstrip('/')
     db_path = config['general']['dbpath']
+    owo = config['general'].getboolean('owo')
 
     db = TinyDB(db_path)
 
     # Generate an ID
-    uid = gen_rand_id()
+    uid = (owo_encode(url) if owo else gen_rand_id())
+
 
     # Add http to URL if not present
     if "http" not in url:

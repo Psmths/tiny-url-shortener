@@ -14,3 +14,6 @@ agelimit = 0
 
 #The domain and directory the shortener is hosted on
 domain = example.com/s
+
+#UwU
+owo = yes
