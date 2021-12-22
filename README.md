@@ -1,5 +1,4 @@
-# tiny-url-shortener
-Tiny URL shortener
+# Tiny URL shortener
 
 This is a very small and minimal URL shortening service written in PHP and Python 3. To install, simply clone the repository and place the files in a directory of your choice.
 
